@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">TictactoeDroid</string>
+    <string name="game_status">Game Status:</string>
+    <string name="restart">RESTART</string>
 </resources>
