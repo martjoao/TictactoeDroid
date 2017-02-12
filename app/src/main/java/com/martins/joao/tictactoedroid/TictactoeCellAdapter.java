@@ -10,6 +10,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.martins.joao.tictactoedroid.exception.FullCellException;
+import com.martins.joao.tictactoedroid.exception.GameAlreadyFinishedException;
 import com.martins.joao.tictactoedroid.model.TictactoeBoard;
 
 /**
@@ -49,9 +50,9 @@ public class TictactoeCellAdapter extends RecyclerView.Adapter<TictactoeCellAdap
         try {
             gameBoard.play(position);
             notifyItemChanged(position);
-            clickHandler.onClick(gameBoard.getGameState());
-        } catch (FullCellException e) {
-            clickHandler.onClick(null);
+            clickHandler.onClick(gameBoard.getGameState(), null);
+        } catch (FullCellException | GameAlreadyFinishedException e) {
+            clickHandler.onClick(null, e.getMessage());
         }
     }
 
@@ -93,7 +94,7 @@ public class TictactoeCellAdapter extends RecyclerView.Adapter<TictactoeCellAdap
     }
 
     public interface GameGridAdapterOnClickHandler {
-        void onClick(TictactoeBoard.GameState state);
+        void onClick(TictactoeBoard.GameState state, String message);
     }
 }
 

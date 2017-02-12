@@ -37,9 +37,9 @@ public class MainActivity extends AppCompatActivity implements TictactoeCellAdap
     }
 
     @Override
-    public void onClick(TictactoeBoard.GameState state) {
+    public void onClick(TictactoeBoard.GameState state, String message) {
         if (state == null) {
-            Toast.makeText(this, "Cell is not empty", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, message, Toast.LENGTH_LONG).show();
         }
         else {
             switch (state) {

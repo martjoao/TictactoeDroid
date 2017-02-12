@@ -1,6 +1,7 @@
 package com.martins.joao.tictactoedroid.model;
 
 import com.martins.joao.tictactoedroid.exception.FullCellException;
+import com.martins.joao.tictactoedroid.exception.GameAlreadyFinishedException;
 
 import java.util.Arrays;
 
@@ -44,12 +45,17 @@ public class TictactoeBoard {
     }
 
     /**
+     *
      * Sets a cell on the board to Player.X or Player.Y
      *
      * @param pos   Position to be set
      * @throws FullCellException    thwrown if cell is not empty
+     * @throws GameAlreadyFinishedException    thwrown if game has already finished
      */
-    public void play(int pos) throws FullCellException {
+    public void play(int pos) throws FullCellException, GameAlreadyFinishedException {
+        if (mGameState != GameState.X_TURN && mGameState != GameState.O_TURN) {
+            throw new GameAlreadyFinishedException("Your game has already finished. Start a new one!");
+        }
         if (!isCellEmpty(pos)) {
             throw new FullCellException("Cell is already taken");
         }
