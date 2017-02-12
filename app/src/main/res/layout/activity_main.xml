@@ -40,11 +40,13 @@
         android:layout_marginBottom="16dp"/>
 
     <Button
+        android:id="@+id/b_restart_game"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:text="@string/restart"
         android:textAllCaps="true"
-        android:textSize="22sp" />
+        android:textSize="22sp"
+        android:onClick=""/>
 
 </LinearLayout>
