@@ -2,4 +2,10 @@
     <string name="app_name">TictactoeDroid</string>
     <string name="game_status">Game Status:</string>
     <string name="restart">RESTART</string>
+    <string name="turn_x">X\'s turn</string>
+    <string name="turn_o">O\'s turn</string>
+    <string name="win_x">X wins</string>
+    <string name="win_o">O wins</string>
+    <string name="tie">TIED</string>
+
 </resources>
