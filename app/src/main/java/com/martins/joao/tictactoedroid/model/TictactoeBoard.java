@@ -33,88 +33,93 @@ public class TictactoeBoard {
 
     private Player[] mCellOwner;
 
-    private boolean mXTurn = true;
-
+    private GameState mGameState;
     /**
      * Constructor initializes cells to Player.NONE
      */
     public TictactoeBoard() {
         mCellOwner = new Player[9];
         Arrays.fill(mCellOwner, Player.NONE);
+        mGameState = GameState.X_TURN;
     }
 
     /**
      * Sets a cell on the board to Player.X or Player.Y
      *
      * @param pos   Position to be set
-     * @return      Game winner. Null if game is not over. Player.NONE if game tied
      * @throws FullCellException    thwrown if cell is not empty
      */
-    public Player play(int pos) throws FullCellException {
-        if (isCellEmpty(pos)) {
+    public void play(int pos) throws FullCellException {
+        if (!isCellEmpty(pos)) {
             throw new FullCellException("Cell is already taken");
         }
 
-        if (mXTurn) {
+        if (isXTurn()) {
             setCellOwner(pos, Player.X);
+            mGameState = GameState.X_TURN;
         }
         else {
             setCellOwner(pos, Player.O);
+            mGameState = GameState.O_TURN;
         }
 
-        mXTurn = !mXTurn;
-
-        return scored(pos);
+        if (!checkForEndgame(pos)) {
+            mGameState = mGameState == GameState.X_TURN ? GameState.O_TURN : GameState.X_TURN;
+        }
     }
 
     /**
      * Checks if cell at pos is part of a complete line/columns/diagonal
      * @param pos   Position to be checked
-     * @return      Game winner. Null if game is not over. Player.NONE if game tied
+     * @return      true if game finished
      */
-    public Player scored(int pos) {
+    public boolean checkForEndgame(int pos) {
         int xPos = pos / 3;
         int yPos = pos % 3;
 
         Player val = getCellOwner(pos);
+        GameState winState = val == Player.X ? GameState.X_WINS : GameState.O_WINS;
 
         //If row is complete
         if (val == getCellOwner(xPos, 0) &&
-            val == getCellOwner(xPos, 1)  &&
-            val == getCellOwner(xPos, 2)) {
-            return val;
+                val == getCellOwner(xPos, 1) &&
+                val == getCellOwner(xPos, 2)) {
+            mGameState = winState;
+            return true;
         }
 
         //if column is complete
         if (val == getCellOwner(0, yPos) &&
-            val == getCellOwner(1, yPos)  &&
-            val == getCellOwner(2, yPos)) {
-            return val;
+                val == getCellOwner(1, yPos) &&
+                val == getCellOwner(2, yPos)) {
+            mGameState = winState;
+            return true;
         }
 
         //If in any diagonal
         if (xPos == yPos || xPos + yPos == 2) {
             //if main diagonal is complete
             if (val == getCellOwner(0, 0) &&
-                val == getCellOwner(1, 1)  &&
-                val == getCellOwner(2, 2)) {
-                   return val;
+                    val == getCellOwner(1, 1) &&
+                    val == getCellOwner(2, 2)) {
+                mGameState = winState;
+                return true;
             }
             //if secondary diagonal is complete
             if (val == getCellOwner(2, 0) &&
-                val == getCellOwner(1, 1)  &&
-                val == getCellOwner(0, 2)) {
-                return val;
+                    val == getCellOwner(1, 1) &&
+                    val == getCellOwner(0, 2)) {
+                mGameState = winState;
+                return true;
             }
         }
 
-        if (isBoardFull())
-            return Player.NONE;
-        else
-            return null;
-
+        if (isBoardFull()) {
+            mGameState = GameState.TIE;
+            return true;
+        }
+        return false;
     }
-
 
     public Player getCellOwner(int pos) {
         return mCellOwner[pos];
@@ -159,10 +164,18 @@ public class TictactoeBoard {
     }
 
     public boolean isXTurn() {
-        return mXTurn;
+        return mGameState == GameState.X_TURN;
     }
+
+    public GameState getGameState() {
+        return mGameState;
+    }
+
 
     public enum Player {
         NONE, X, O
+    }
+    public enum GameState {
+        X_TURN, O_TURN, X_WINS, O_WINS, TIE
     }
 }

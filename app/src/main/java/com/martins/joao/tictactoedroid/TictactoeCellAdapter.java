@@ -1,11 +1,16 @@
 package com.martins.joao.tictactoedroid;
 
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SwitchCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.martins.joao.tictactoedroid.exception.FullCellException;
+import com.martins.joao.tictactoedroid.model.TictactoeBoard;
 
 /**
  * Created by João on 12/02/2017.
@@ -16,9 +21,16 @@ public class TictactoeCellAdapter extends RecyclerView.Adapter<TictactoeCellAdap
     private static final String TAG = TictactoeCellAdapter.class.getSimpleName();
 
     GameGridAdapterOnClickHandler clickHandler;
+    TictactoeBoard gameBoard;
 
-    TictactoeCellAdapter(GameGridAdapterOnClickHandler handler) {
-        clickHandler = handler;
+    TictactoeCellAdapter(GameGridAdapterOnClickHandler clickHandler, TictactoeBoard gameBoard) {
+        this.clickHandler = clickHandler;
+        this.gameBoard = gameBoard;
+    }
+
+    public void setGameBoard(TictactoeBoard gameBoard) {
+        this.gameBoard = gameBoard;
+        notifyDataSetChanged();
     }
 
     @Override
@@ -31,6 +43,16 @@ public class TictactoeCellAdapter extends RecyclerView.Adapter<TictactoeCellAdap
     @Override
     public void onBindViewHolder(TictactoeCellViewHolder holder, int position) {
         holder.bind(position);
+    }
+
+    public void cellClicked(int position) {
+        try {
+            gameBoard.play(position);
+            notifyItemChanged(position);
+            clickHandler.onClick(gameBoard.getGameState());
+        } catch (FullCellException e) {
+            clickHandler.onClick(null);
+        }
     }
 
     @Override
@@ -50,19 +72,28 @@ public class TictactoeCellAdapter extends RecyclerView.Adapter<TictactoeCellAdap
         }
 
         public void bind(int position) {
-            mCellOwnerTextView.setText(String.valueOf(position));
+            switch(gameBoard.getCellOwner(position)) {
+                case NONE:
+                    mCellOwnerTextView.setText("");
+                    break;
+                case X:
+                    mCellOwnerTextView.setText("X");
+                    break;
+                case O:
+                    mCellOwnerTextView.setText("O");
+                    break;
+            }
         }
 
         @Override
         public void onClick(View view) {
-            Log.d(TAG, "ENTERING ONCLICK");
             int currentPosition = getAdapterPosition();
-            TictactoeCellAdapter.this.clickHandler.onClick(currentPosition);
+            TictactoeCellAdapter.this.cellClicked(currentPosition);
         }
     }
 
     public interface GameGridAdapterOnClickHandler {
-        void onClick(int position);
+        void onClick(TictactoeBoard.GameState state);
     }
 }
 
