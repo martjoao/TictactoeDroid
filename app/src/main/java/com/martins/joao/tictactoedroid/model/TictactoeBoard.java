@@ -31,35 +31,35 @@ public class TictactoeBoard {
      *  2,O | 2,1 | 2,2
      */
 
-    private CellOwner[] mCells;
+    private Player[] mCellOwner;
 
     private boolean mXTurn = true;
 
     /**
-     * Constructor initializes cells to CellOwner.EMPTY
+     * Constructor initializes cells to Player.NONE
      */
     public TictactoeBoard() {
-        mCells = new CellOwner[9];
-        Arrays.fill(mCells, CellOwner.EMPTY);
+        mCellOwner = new Player[9];
+        Arrays.fill(mCellOwner, Player.NONE);
     }
 
     /**
-     * Sets a cell on the board to CellOwner.X or CellOwner.Y
+     * Sets a cell on the board to Player.X or Player.Y
      *
      * @param pos   Position to be set
-     * @return      true if the current player wins the game
+     * @return      Game winner. Null if game is not over. Player.NONE if game tied
      * @throws FullCellException    thwrown if cell is not empty
      */
-    public boolean play(int pos) throws FullCellException {
+    public Player play(int pos) throws FullCellException {
         if (isCellEmpty(pos)) {
             throw new FullCellException("Cell is already taken");
         }
 
         if (mXTurn) {
-            setCellOwner(pos, CellOwner.X);
+            setCellOwner(pos, Player.X);
         }
         else {
-            setCellOwner(pos, CellOwner.O);
+            setCellOwner(pos, Player.O);
         }
 
         mXTurn = !mXTurn;
@@ -70,26 +70,26 @@ public class TictactoeBoard {
     /**
      * Checks if cell at pos is part of a complete line/columns/diagonal
      * @param pos   Position to be checked
-     * @return      true if player has scored
+     * @return      Game winner. Null if game is not over. Player.NONE if game tied
      */
-    public boolean scored(int pos) {
+    public Player scored(int pos) {
         int xPos = pos / 3;
         int yPos = pos % 3;
 
-        CellOwner val = getCellOwner(pos);
+        Player val = getCellOwner(pos);
 
         //If row is complete
         if (val == getCellOwner(xPos, 0) &&
             val == getCellOwner(xPos, 1)  &&
             val == getCellOwner(xPos, 2)) {
-            return true;
+            return val;
         }
 
         //if column is complete
         if (val == getCellOwner(0, yPos) &&
             val == getCellOwner(1, yPos)  &&
             val == getCellOwner(2, yPos)) {
-            return true;
+            return val;
         }
 
         //If in any diagonal
@@ -98,37 +98,41 @@ public class TictactoeBoard {
             if (val == getCellOwner(0, 0) &&
                 val == getCellOwner(1, 1)  &&
                 val == getCellOwner(2, 2)) {
-                   return true;
+                   return val;
             }
             //if secondary diagonal is complete
             if (val == getCellOwner(2, 0) &&
                 val == getCellOwner(1, 1)  &&
                 val == getCellOwner(0, 2)) {
-                return true;
+                return val;
             }
         }
-        return false;
+
+        if (isBoardFull())
+            return Player.NONE;
+        else
+            return null;
 
     }
 
 
-    public CellOwner getCellOwner(int pos) {
-        return mCells[pos];
+    public Player getCellOwner(int pos) {
+        return mCellOwner[pos];
     }
 
-    public void setCellOwner(int pos, CellOwner owner) {
-        mCells[pos] = owner;
+    public void setCellOwner(int pos, Player owner) {
+        mCellOwner[pos] = owner;
     }
 
     public boolean isCellEmpty(int pos) {
-        return mCells[pos] == CellOwner.EMPTY;
+        return mCellOwner[pos] == Player.NONE;
     }
 
-    public CellOwner getCellOwner(int xpos, int ypos) {
+    public Player getCellOwner(int xpos, int ypos) {
         return getCellOwner(xpos * 3 + ypos);
     }
 
-    public void setCellOwner(int xpos, int ypos, CellOwner owner) {
+    public void setCellOwner(int xpos, int ypos, Player owner) {
         setCellOwner(xpos * 3 + ypos, owner);
     }
 
@@ -137,8 +141,8 @@ public class TictactoeBoard {
     }
 
     public boolean isBoardEmpty() {
-        for (CellOwner c : mCells) {
-            if (c != CellOwner.EMPTY) {
+        for (Player c : mCellOwner) {
+            if (c != Player.NONE) {
                 return false;
             }
         }
@@ -146,8 +150,8 @@ public class TictactoeBoard {
     }
 
     public boolean isBoardFull() {
-        for (CellOwner c : mCells) {
-            if (c == CellOwner.EMPTY) {
+        for (Player c : mCellOwner) {
+            if (c == Player.NONE) {
                 return false;
             }
         }
@@ -158,7 +162,7 @@ public class TictactoeBoard {
         return mXTurn;
     }
 
-    public enum CellOwner {
-        EMPTY, X, O
+    public enum Player {
+        NONE, X, O
     }
 }
