@@ -1,14 +1,12 @@
-package com.martins.joao.tictactoedroid;
+package com.martins.joao.tictactoedroid.view;
 
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SwitchCompat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.martins.joao.tictactoedroid.R;
 import com.martins.joao.tictactoedroid.exception.FullCellException;
 import com.martins.joao.tictactoedroid.exception.GameAlreadyFinishedException;
 import com.martins.joao.tictactoedroid.model.TictactoeBoard;

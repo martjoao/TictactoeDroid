@@ -7,5 +7,7 @@
     <string name="win_x">X wins</string>
     <string name="win_o">O wins</string>
     <string name="tie">Tied</string>
+    <string name="error_message">Failed to download image resources.</string>
+
 
 </resources>
