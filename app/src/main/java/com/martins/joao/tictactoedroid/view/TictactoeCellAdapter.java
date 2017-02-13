@@ -4,12 +4,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.martins.joao.tictactoedroid.R;
 import com.martins.joao.tictactoedroid.exception.FullCellException;
 import com.martins.joao.tictactoedroid.exception.GameAlreadyFinishedException;
 import com.martins.joao.tictactoedroid.model.TictactoeBoard;
+import com.martins.joao.tictactoedroid.utils.ResourceManager;
 
 /**
  * Created by João on 12/02/2017.
@@ -61,11 +63,11 @@ public class TictactoeCellAdapter extends RecyclerView.Adapter<TictactoeCellAdap
 
     public class TictactoeCellViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
-        private TextView mCellOwnerTextView;
+        private ImageView mCellOwnerImageView;
 
         public TictactoeCellViewHolder(View itemView) {
             super(itemView);
-            mCellOwnerTextView = (TextView) itemView.findViewById(R.id.tv_cell_owner);
+            mCellOwnerImageView = (ImageView) itemView.findViewById(R.id.iv_cell_owner);
 
             itemView.setOnClickListener(this);
         }
@@ -73,13 +75,13 @@ public class TictactoeCellAdapter extends RecyclerView.Adapter<TictactoeCellAdap
         public void bind(int position) {
             switch(gameBoard.getCellOwner(position)) {
                 case NONE:
-                    mCellOwnerTextView.setText("");
+                    mCellOwnerImageView.setImageBitmap(null);
                     break;
                 case X:
-                    mCellOwnerTextView.setText("X");
+                    mCellOwnerImageView.setImageBitmap(ResourceManager.INSTANCE.getImage("cross"));
                     break;
                 case O:
-                    mCellOwnerTextView.setText("O");
+                    mCellOwnerImageView.setImageBitmap(ResourceManager.INSTANCE.getImage("circle"));
                     break;
             }
         }
